@@ -20,6 +20,8 @@
         "node-pushover-client": "~1.3.9",
         "nconf":"*",
         "underscore": "*",
-        "connect-redis": "*"
+        "connect-redis": "*",
+        "jsonwebtoken": "*",
+        "socketio-jwt": "*"
     }
 }

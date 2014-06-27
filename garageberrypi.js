@@ -6,7 +6,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
 var nconf = require('nconf');
-var RedisStore = require('connect-redis')(session);
+var jwt = require('jsonwebtoken');
 
 var routes = require('./routes/index');
 var auth = require('./routes/auth');
@@ -17,6 +17,7 @@ app.enable('trust proxy');
 // Wire up Socket.IO for communication with JS UI
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
+var socketioJwt = require('socketio-jwt');
 
 // Parse configuration
 nconf.argv()
@@ -27,15 +28,17 @@ nconf.argv()
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
-io.on('connection', function(socket) {
-    console.log("connected");
-    socket.on('auth', function(authArgs) {
-        console.log('auth');
-        socket.on('open', function() {
-            console.log('open');
-        });
+io.set('authorization', socketioJwt.authorize({
+    secret: nconf.get('jwt:secret'),
+    handshake: true
+}));
+
+io.sockets.on('connection', function(socket) {
+    console.log(socket.handshake.username, 'connected');
+    socket.on('open', function() {
+        console.log('open');
     });
-    socket.on('disconnect', function(socket) {
+    socket.on('disconnect', function() {
         console.log('disconnected');
     });
 });
@@ -47,25 +50,7 @@ app.use(bodyParser.urlencoded());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(session({
-    store: new RedisStore({
-        ttl: 60000
-    }),
-    secret: nconf.get('session:secret')
-}));
-
 app.use('/', routes);
-
-// Don't allow any API calls unless valid session
-app.use('/auth', function(req, res, next) {
-    if (req.session.authenticated) {
-        next();
-    } else {
-        res.send('Not Authenticated!')
-    }
-});
-
-app.use('/auth', auth);
 
 /// catch 404 and forward to error handler
 app.use(function (req, res, next) {

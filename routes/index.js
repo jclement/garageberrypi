@@ -1,18 +1,14 @@
 var express = require('express');
 var nconf = require('nconf');
+var jwt = require('jsonwebtoken');
 var _ = require('underscore');
 var router = express.Router();
 
 router.get('/', function (req, res) {
-    // if session: show index else login
-    if (req.session.authenticated) {
-        res.render('index');
-    } else {
-        res.render('login');
-    }
+    res.render('index');
 });
 
-router.post('/', function (req,res) {
+router.post('/login', function (req,res) {
     var username = req.body.username;
     var password = req.body.password;
 
@@ -20,16 +16,18 @@ router.post('/', function (req,res) {
     var success = false;
     _.each(nconf.get('logins'), function(login) {
         if (login.username.toUpperCase() === username.toUpperCase() && login.password === password) {
-            req.session.authenticated = true;
-            req.session.authenticatedUser = login.username;
+            var profile = {
+               username: login.username,
+               date: new Date()
+            };
+            var token = jwt.sign(profile, nconf.get('jwt:secret'), {expiresInMinutes: 60*24*365});
+            res.json({status: true, token: token});
             success = true;
         }
     });
 
-    if (success) {
-        res.render('index')
-    } else {
-        res.render('login', {message: 'Login Failed!', username: username});
+    if (!success) {
+        res.json({'status':false, 'message':'Invalid user or password'});
     }
 });
 

@@ -3,7 +3,24 @@ extends layout
 block content
     h1 GarageberryPi
         sup 2.0
-    button.btn.btn-default.hidden#button Button
+    #login.hidden
+        p Identify yourself stranger!
+        p.alert.alert-danger.hidden#login_message
+        form(action="/", role="form")
+            .form-group
+                label(for="username") User:
+                input(name="username",type="text",placeholder="Enter Username",value="#{username || ''}").form-control#username
+            .form-group
+                label(for="password") Password:
+                input(name="password",type="password",placeholder="Enter Password").form-control#password
+            button.btn.btn-default(type="button")#login_button Login
+
+    #main.hidden
+        p Logged in!
+        .btn-group
+            button.btn.btn-primary.hidden#open_button Open Door
+            button.btn.btn-danger.hidden#close_button Close Door
+            button.btn.btn-default#logout_button Logout
 
 block extra_javascript
     script(src="/javascripts/main.js")

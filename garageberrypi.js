@@ -29,8 +29,11 @@ app.set('view engine', 'jade');
 
 io.on('connection', function(socket) {
     console.log("connected");
-    socket.on('open', function(e) {
-        console.log('open');
+    socket.on('auth', function(authArgs) {
+        console.log('auth');
+        socket.on('open', function() {
+            console.log('open');
+        });
     });
     socket.on('disconnect', function(socket) {
         console.log('disconnected');

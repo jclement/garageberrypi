@@ -1,5 +1,8 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
+    h1 GarageberryPi
+    button.btn.btn-default.hidden#button Button
+
+block extra_javascript
+    script(src="/javascripts/main.js")

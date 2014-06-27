@@ -1,7 +1,14 @@
 doctype html
 html
-  head
-    title= title
-    link(rel='stylesheet', href='/stylesheets/style.css')
-  body
-    block content
+    head
+        title= title
+        link(rel='stylesheet', href='/stylesheets/bootstrap.min.css')
+        link(rel='stylesheet', href='/stylesheets/style.css')
+    body
+        .container
+            block content
+        script(src="/javascripts/jquery-1.11.1.min.js")
+        script(src="/javascripts/underscore-min.js")
+        script(src="/javascripts/bootstrap.min.js")
+        script(src="/javascripts/socket.io.js")
+        block extra_javascript

@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 var debug = require('debug')('garageberrypi');
-var app = require('../app');
+var garageberrypi = require('../garageberrypi');
 
-app.set('port', process.env.PORT || 3000);
+garageberrypi.app.set('port', process.env.PORT || 3000);
 
-var server = app.listen(app.get('port'), function() {
+var server = garageberrypi.http.listen(garageberrypi.app.get('port'), function() {
   debug('Express server listening on port ' + server.address().port);
 });

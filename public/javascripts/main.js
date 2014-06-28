@@ -54,7 +54,11 @@ $(function () {
         var log = function (message) {
             var row = $("<tr></tr>");
             row.hide();
-            row.append('<td>' + message.date + '</td>');
+            row.append('<td>' +
+                (new Date(message.date)).toLocaleDateString() + ' ' +
+                (new Date(message.date)).toLocaleTimeString()
+                + '</td>');
+
             if( message.operation === 'open') {
                 row.append('<td><span class="label label-success">Open</span></td>');
             } else if (message.operation === 'close') {

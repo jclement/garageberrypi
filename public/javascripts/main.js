@@ -53,6 +53,7 @@ $(function () {
 
         var log = function (message) {
             var row = $("<tr></tr>");
+            row.hide();
             row.append('<td>' + message.date + '</td>');
             if( message.operation === 'open') {
                 row.append('<td><span class="label label-success">Open</span></td>');
@@ -68,6 +69,7 @@ $(function () {
             row.append('<td>' + _.escape(message.user) + '</td>');
             row.append('<td>' + _.escape(message.agent) + '</td>');
             $("#log").prepend(row);
+            row.fadeIn();
         };
 
         // open socket

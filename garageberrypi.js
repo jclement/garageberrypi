@@ -4,6 +4,7 @@ var favicon = require('static-favicon');
 var logger = require('morgan');
 var bodyParser = require('body-parser');
 var nconf = require('nconf');
+require('colors');
 var redis = require('redis');
 var client = redis.createClient();
 
@@ -50,6 +51,12 @@ io.use(function(socket, next) {
     }
 });
 
+var log = function(operation, session) {
+    var date = new Date().toISOString();
+    console.log(operation.red + ' by ' + session.username.blue + ' on ' + date.green);
+    io.emit("log", operation + ' by ' + session.username + ' on ' + date);
+};
+
 var ioCount = 0;
 io.on('connection', function (socket) {
     socket.broadcast.emit('connectionCount', ++ioCount);
@@ -57,10 +64,10 @@ io.on('connection', function (socket) {
     socket.emit('state', {'status':'open','duration':765});
     socket.emit('updatedPicture');
     socket.on('open', function () {
-        console.log('open');
+        log('open', socket.session);
     });
     socket.on('close', function () {
-        console.log(socket.session.username + ' close');
+        log('close', socket.session);
     });
     socket.on('disconnect', function () {
         console.log('disconnected');

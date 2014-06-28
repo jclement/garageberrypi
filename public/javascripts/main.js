@@ -37,6 +37,10 @@ $(function () {
             $("#count").text(count);
         };
 
+        var log = function (message) {
+            console.log(message);
+        };
+
         // Show main form body
         $("#main").removeClass("hidden");
 
@@ -46,6 +50,7 @@ $(function () {
             socket.on('state', updateState);
             socket.on('updatedPicture', updatePicture);
             socket.on('connectionCount', updateCount);
+            socket.on('log', log);
         });
 
         $("#open_button").click(function () {

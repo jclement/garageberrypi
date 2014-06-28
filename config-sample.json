@@ -1,4 +1,5 @@
-{    "webcamurl": "/tmp/webcam.jpg",
+{
+    "webcamurl": "/tmp/webcam.jpg",
     "webcamstaticurl": "webcam-static.jpg"
 }
 

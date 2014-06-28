@@ -66,6 +66,7 @@ $(function () {
                 row.append('<td><span class="label label-default">' + _.escape(message.operation) + '</span></td>');
             }
             row.append('<td>' + _.escape(message.user) + '</td>');
+            row.append('<td>' + _.escape(message.agent) + '</td>');
             $("#log").prepend(row);
         };
 

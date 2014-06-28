@@ -62,31 +62,32 @@ io.use(function(socket, next) {
 });
 
 // Log helper.  Logs actions to redis, console and all active clients
-var log = function(operation, session) {
+var log = function(operation, socket) {
     var date = new Date();
-    console.log(operation.red + ' by ' + session.username.blue + ' on ' + date.toISOString().green);
+    console.log(operation.red + ' by ' + socket.session.username.blue + ' on ' + date.toISOString().green + ' - ' + socket.client.request.headers['user-agent'].yellow);
     io.emit("log", {
         operation: operation,
-        user: session.username,
-        date: date
+        user: socket.session.username,
+        date: date,
+        agent: socket.client.request.headers["user-agent"]
     });
 };
 
 var ioCount = 0;
 io.on('connection', function (socket) {
-    log("login", socket.session);
+    log("login", socket);
     socket.broadcast.emit('connectionCount', ++ioCount);
     socket.emit('connectionCount', ioCount);
     socket.emit('state', {'status':'open','duration':765});
     socket.emit('updatedPicture');
     socket.on('open', function () {
-        log('open', socket.session);
+        log('open', socket);
     });
     socket.on('close', function () {
-        log('close', socket.session);
+        log('close', socket);
     });
     socket.on('disconnect', function () {
-        log("logout", socket.session);
+        log("logout", socket);
         socket.broadcast.emit('connectionCount', --ioCount);
     });
 });

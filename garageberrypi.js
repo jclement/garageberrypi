@@ -64,7 +64,7 @@ io.use(function(socket, next) {
 // Log helper.  Logs actions to redis, console and all active clients
 var log = function(operation, socket) {
     var date = new Date();
-    console.log(operation.red + ' by ' + socket.session.username.blue + ' on ' + date.toISOString().green + ' - ' + socket.client.request.headers['user-agent'].yellow);
+    console.log(operation.red + ' by ' + socket.session.username.blue + ' @ ' + date.toISOString().green + ' - ' + socket.client.request.headers['user-agent'].yellow);
     io.emit("log", {
         operation: operation,
         user: socket.session.username,

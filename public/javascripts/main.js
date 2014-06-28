@@ -7,6 +7,8 @@ $(function () {
 
     var start = function (token) {
         $("#logout_button").removeClass("hidden");
+        $("#main").removeClass("hidden");
+
         var updateState = function (state) {
             if (state.status === 'open') {
                 var duration;
@@ -17,20 +19,31 @@ $(function () {
                 }
                 $("#open_button").addClass("hidden");
                 $("#close_button").removeClass("hidden");
-                $("#message").html("Door is currently <b>open</b> for " + duration + ".");
+                $("#message")
+                    .html("Door has been <b>open</b> for " + duration + ".")
+                    .removeClass("alert-warning")
+                    .removeClass("alert-default")
+                    .addClass("alert-danger");
             } else if (state.status === 'closed') {
                 $("#open_button").removeClass("hidden");
                 $("#close_button").addClass("hidden");
-                $("#message").html("Door is currently <b>closed</b>.");
+                $("#message")
+                    .html("Door is currently <b>closed</b>.")
+                    .removeClass("alert-warning")
+                    .addClass("alert-default")
+                    .removeClass("alert-danger");
             } else if (state.status === 'moving') {
                 $("#open_button").addClass("hidden");
                 $("#close_button").addClass("hidden");
-                $("#message").html("Door is currently <b>moving</b>.");
+                $("#message")
+                    .html("Door is currently <b>moving</b>.")
+                    .addClass("alert-warning")
+                    .removeClass("alert-default")
+                    .removeClass("alert-danger");
             }
         };
 
         var updatePicture = function () {
-            console.log('new picture!');
             $("#webcam").attr("src","webcam.jpg?token=" + token + "&date=" + new Date().toISOString());
         };
 
@@ -39,11 +52,22 @@ $(function () {
         };
 
         var log = function (message) {
-            console.log(message);
+            var row = $("<tr></tr>");
+            row.append('<td>' + message.date + '</td>');
+            if( message.operation === 'open') {
+                row.append('<td><span class="label label-success">Open</span></td>');
+            } else if (message.operation === 'close') {
+                row.append('<td><span class="label label-danger">Close</span></td>');
+            } else if (message.operation === 'login') {
+                row.append('<td><span class="label label-info">Login</span></td>');
+            } else if (message.operation === 'logout') {
+                row.append('<td><span class="label label-primary">Logout</span></td>');
+            } else {
+                row.append('<td><span class="label label-default">' + _.escape(message.operation) + '</span></td>');
+            }
+            row.append('<td>' + _.escape(message.user) + '</td>');
+            $("#log").prepend(row);
         };
-
-        // Show main form body
-        $("#main").removeClass("hidden");
 
         // open socket
         var socket = io.connect('?token=' + token);

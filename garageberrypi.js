@@ -63,13 +63,18 @@ io.use(function(socket, next) {
 
 // Log helper.  Logs actions to redis, console and all active clients
 var log = function(operation, session) {
-    var date = new Date().toISOString();
-    console.log(operation.red + ' by ' + session.username.blue + ' on ' + date.green);
-    io.emit("log", operation + ' by ' + session.username + ' on ' + date);
+    var date = new Date();
+    console.log(operation.red + ' by ' + session.username.blue + ' on ' + date.toISOString().green);
+    io.emit("log", {
+        operation: operation,
+        user: session.username,
+        date: date
+    });
 };
 
 var ioCount = 0;
 io.on('connection', function (socket) {
+    log("login", socket.session);
     socket.broadcast.emit('connectionCount', ++ioCount);
     socket.emit('connectionCount', ioCount);
     socket.emit('state', {'status':'open','duration':765});
@@ -81,6 +86,7 @@ io.on('connection', function (socket) {
         log('close', socket.session);
     });
     socket.on('disconnect', function () {
+        log("logout", socket.session);
         socket.broadcast.emit('connectionCount', --ioCount);
     });
 });

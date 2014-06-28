@@ -5,19 +5,30 @@ $(function () {
     };
 
     var start = function(token) {
-        console.log('Starting');
+        var updateState = function(state) {
+            if (state.status === 'open') {
+                $("#open_button").addClass("hidden");
+                $("#close_button").removeClass("hidden");
+                $("#message").html("Door is currently <b>open</b> for duration.");
+            } else if (state.status === 'closed') {
+                $("#open_button").removeClass("hidden");
+                $("#close_button").addClass("hidden");
+                $("#message").html("Door is currently <b>closed</b>.");
+            } else if (state.status === 'moving') {
+                $("#open_button").addClass("hidden");
+                $("#close_button").addClass("hidden");
+                $("#message").html("Door is currently <b>moving</b>.");
+            }
+        };
+
+        // Show main form body
         $("#main").removeClass("hidden");
+
+        // open socket
         var socket = io.connect('?token=' + token);
         socket.on("connect", function() {
-            console.log('connect');
-            // Login code goes here?
-            socket.emit('auth');
-            socket.on('tick', function() {
-                console.log('tick');
-            });
+            socket.on('state', updateState);
         });
-
-        $("#open_button").removeClass("hidden");
 
         $("#open_button").click(function() {
             socket.emit("open");

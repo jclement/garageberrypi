@@ -37,9 +37,10 @@ setInterval(function() {
 
 io.set('authorization', function(data, accept) {
     if (data && data._query && data._query.token) {
-        session.test(data._query.token, function(isValid, data) {
+        session.test(data._query.token, function(isValid, sessionData) {
             if (isValid) {
-                data.session = data;
+                console.log(sessionData);
+                data.session = sessionData;
                 accept(null, true);
             } else {
                 accept("BAD_TOKEN", false);
@@ -51,9 +52,9 @@ io.set('authorization', function(data, accept) {
 });
 
 io.on('connection', function (socket) {
-    console.log(socket.handshake.username, 'connected');
+    //console.log(socket.data.session.username, 'connected');
     socket.on('open', function () {
-        console.log('open');
+        socket.emit('state', {'status':'open','duration':765});
     });
     socket.on('disconnect', function () {
         console.log('disconnected');

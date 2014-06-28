@@ -30,7 +30,8 @@ $(function () {
         };
 
         var updatePicture = function () {
-            console.log('updatePicture');
+            console.log('new picture!');
+            $("#webcam").attr("src","webcam.jpg?token=" + token + "&date=" + new Date().toISOString());
         };
 
         var updateCount = function (count) {

@@ -1,10 +1,4 @@
-{
-    "session": {
-        "secret": "SECRET GOES HERE"
-    },
-    "logins": [
-        {"username": "user1", "password":"test"},
-        {"username": "user2", "password":"test"}
-    ]
+{    "webcamurl": "/tmp/webcam.jpg",
+    "webcamstaticurl": "webcam-static.jpg"
 }
 

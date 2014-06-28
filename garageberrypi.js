@@ -4,6 +4,7 @@ var favicon = require('static-favicon');
 var logger = require('morgan');
 var bodyParser = require('body-parser');
 var nconf = require('nconf');
+var fs = require('fs');
 require('colors');
 var redis = require('redis');
 var client = redis.createClient();
@@ -31,6 +32,11 @@ nconf.argv()
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
+
+fs.watchFile(nconf.get('webcamurl'), function(curr, prev) {
+    console.log('image updated');
+    io.emit('updatedPicture');
+});
 
 setInterval(function() {
     io.emit('tick');

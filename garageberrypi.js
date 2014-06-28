@@ -1,3 +1,4 @@
+// Common libraries
 var express = require('express');
 var path = require('path');
 var favicon = require('static-favicon');
@@ -5,19 +6,25 @@ var logger = require('morgan');
 var bodyParser = require('body-parser');
 var nconf = require('nconf');
 var fs = require('fs');
-require('colors');
 var redis = require('redis');
 var client = redis.createClient();
+require('colors');
 
+// GBP Libraries
+var session = require('./lib/session.js');
+
+// GBP Routes
+var routes_root = require('./routes/index');
+var routes_api_auth = require('./routes/api/auth');
+
+// Catch-all for Redis errors
 client.on('error', function (err) {
     console.log("Error " + err);
 });
 
-var routes_root = require('./routes/index');
-var routes_api_auth = require('./routes/api/auth');
-var session = require('./lib/session.js');
-
 var app = express();
+
+// honor proxy header since this will, probably, run behind nginx
 app.enable('trust proxy');
 
 // Wire up Socket.IO for communication with JS UI
@@ -33,15 +40,12 @@ nconf.argv()
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
+// Watch webcam file for changes and notify clients
 fs.watchFile(nconf.get('webcamurl'), function(curr, prev) {
-    console.log('image updated');
     io.emit('updatedPicture');
 });
 
-setInterval(function() {
-    io.emit('tick');
-}, 2000);
-
+// Authentication on socket.io connections
 io.use(function(socket, next) {
     if (socket.request && socket.request._query && socket.request._query.token) {
         session.verify(socket.request._query.token, function(isValid, sessionData) {
@@ -57,6 +61,7 @@ io.use(function(socket, next) {
     }
 });
 
+// Log helper.  Logs actions to redis, console and all active clients
 var log = function(operation, session) {
     var date = new Date().toISOString();
     console.log(operation.red + ' by ' + session.username.blue + ' on ' + date.green);
@@ -76,7 +81,6 @@ io.on('connection', function (socket) {
         log('close', socket.session);
     });
     socket.on('disconnect', function () {
-        console.log('disconnected');
         socket.broadcast.emit('connectionCount', --ioCount);
     });
 });

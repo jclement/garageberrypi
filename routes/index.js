@@ -10,11 +10,10 @@ router.get('/', function (req, res) {
     res.render('index', {title: 'GarageberryPi'});
 });
 
+// Serve static webcam image unless we have a valid session
 router.get('/webcam.jpg', function(req, res) {
     var token = req.query.token;
-    console.log('Token: ' + token);
     res.writeHead(200, {'Content-type':'image/jpeg'});
-
     if (token) {
         session.verify(token, function(isValid) {
             if (isValid) {

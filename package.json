@@ -21,7 +21,6 @@
         "nconf":"*",
         "underscore": "*",
         "connect-redis": "*",
-        "jsonwebtoken": "*",
-        "socketio-jwt": "*"
+        "redis": "*"
     }
 }

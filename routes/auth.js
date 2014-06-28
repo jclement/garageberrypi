@@ -1,27 +1,41 @@
 var express = require('express');
+var session = require('../lib/session');
+var _ = require('underscore');
 var router = express.Router();
 
-/* GET users listing. */
-router.get('/', function (req, res) {
-    res.send('respond with a resource');
-});
-
-router.get('/api/status', function (req, res) {
-    res.json({
-        's': 'open',
-        'd': 123
+router.post('/login', function (req,res) {
+    var username = req.body.username;
+    var password = req.body.password;
+    session.login(username, password, function(err, token) {
+        if (err) {
+            res.json({status:false, message:'Invalid user or password'});
+        } else {
+            res.json({status: true, token: token});
+        }
     });
 });
 
-router.get('/api/open', function (req, res) {
+router.post('/logout', function (req,res) {
+    var token = req.body.token;
+    session.logout(token, function(err) {
+        if (err) {
+            res.json({status:false, message:'Logout failed'});
+        } else {
+            res.json({status: true});
+        }
+    });
 });
 
-router.get('/api/close', function (req, res) {
-});
-
-router.get('/api/logout', function (req, res) {
-    delete req.session.authenticated;
-    res.redirect('/');
+router.post('/test', function (req,res) {
+    var token = req.body.token;
+    session.test(token, function(err, isValid) {
+        if (!isValid) {
+            res.json({status: false, message: err});
+        } else {
+            res.json({status: true});
+        }
+    });
 });
 
 module.exports = router;
+

@@ -1,10 +1,7 @@
 extends layout
 
 block content
-    h1 GarageberryPi
-        sup 2.0
     #login.hidden
-        p Identify yourself stranger!
         p.alert.alert-danger.hidden#login_message
         form(action="/", role="form")
             .form-group
@@ -17,10 +14,11 @@ block content
 
     #main.hidden
         p#message.well.well-sm
-        .btn-group
-            button.btn.btn-primary.hidden#open_button Open Door
-            button.btn.btn-danger.hidden#close_button Close Door
-            button.btn.btn-default#logout_button Logout
+        button.btn.btn-primary.hidden#open_button Open Door
+        button.btn.btn-danger.hidden#close_button Close Door
+        p(style="padding-top: 20px; font-size: 8pt; color: #888;")
+            i There are <span id="count"></span> active connections.
+
 
 block extra_javascript
     script(src="/javascripts/main.js")

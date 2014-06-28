@@ -21,6 +21,7 @@
         "nconf":"*",
         "underscore": "*",
         "connect-redis": "*",
-        "redis": "*"
+        "redis": "*",
+        "scrypt": "*"
     }
 }

@@ -11,8 +11,8 @@ client.on('error', function (err) {
     console.log("Error " + err);
 });
 
-var routes = require('./routes/index');
-var auth = require('./routes/auth');
+var routes_root = require('./routes/index');
+var routes_api_auth = require('./routes/api/auth');
 var session = require('./lib/session.js');
 
 var app = express();
@@ -35,29 +35,36 @@ setInterval(function() {
     io.emit('tick');
 }, 2000);
 
-io.set('authorization', function(data, accept) {
-    if (data && data._query && data._query.token) {
-        session.test(data._query.token, function(isValid, sessionData) {
+io.use(function(socket, next) {
+    if (socket.request && socket.request._query && socket.request._query.token) {
+        session.verify(socket.request._query.token, function(isValid, sessionData) {
             if (isValid) {
-                console.log(sessionData);
-                data.session = sessionData;
-                accept(null, true);
+                socket.session = sessionData;
+                next();
             } else {
-                accept("BAD_TOKEN", false);
+                next(new Error("BAD_TOKEN"));
             }
         });
     } else {
-        accept("NO_TOKEN", false);
+        next(new Error("NO_TOKEN"));
     }
 });
 
+var ioCount = 0;
 io.on('connection', function (socket) {
-    //console.log(socket.data.session.username, 'connected');
+    socket.broadcast.emit('connectionCount', ++ioCount);
+    socket.emit('connectionCount', ioCount);
+    socket.emit('state', {'status':'open','duration':765});
+    socket.emit('updatedPicture');
     socket.on('open', function () {
-        socket.emit('state', {'status':'open','duration':765});
+        console.log('open');
+    });
+    socket.on('close', function () {
+        console.log(socket.session.username + ' close');
     });
     socket.on('disconnect', function () {
         console.log('disconnected');
+        socket.broadcast.emit('connectionCount', --ioCount);
     });
 });
 
@@ -67,8 +74,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', routes);
-app.use('/auth', auth);
+app.use('/', routes_root);
+app.use('/api/auth', routes_api_auth);
 
 /// catch 404 and forward to error handler
 app.use(function (req, res, next) {

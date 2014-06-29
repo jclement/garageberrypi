@@ -8,6 +8,7 @@ var nconf = require('nconf');
 var fs = require('fs');
 var redis = require('redis');
 var client = redis.createClient();
+var Pushover = require('node-pushover-client');
 var _ = require('underscore');
 require('colors');
 
@@ -83,7 +84,26 @@ garage.on("change", function(state) {
 });
 
 garage.on("trigger", function(trigger) {
-    console.log(trigger);
+    if (trigger.state === 'open') {
+        var message = 'Door left open for ' + trigger.threshold + ' seconds.';
+        log('notice', message);
+        client.lrange('config:pushover', 0, 1000, function(err, data) {
+            if (!err && data.length > 0) {
+                _.each(_.map(data, JSON.parse), function(rec) {
+                    (new Pushover()).send({
+                        title: 'GarageberryPi',
+                        token: rec.token,
+                        user: rec.user,
+                        message: message,
+                        priority: trigger.important ? 1:0,
+                        url: nconf.get('url'),
+                        urlTitle: 'GarageberryPi'
+                    });
+                });
+
+            }
+        });
+    }
 });
 
 var ioCount = 0;

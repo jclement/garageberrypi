@@ -70,6 +70,8 @@ $(function () {
                 row.append('<td><span class="label label-info">Login</span></td>');
             } else if (message.operation === 'logout') {
                 row.append('<td><span class="label label-primary">Logout</span></td>');
+            } else if (message.operation === 'notice') {
+                row.append('<td><span class="label label-warning">Notice</span></td>');
             } else {
                 row.append('<td><span class="label label-default">' + _.escape(message.operation) + '</span></td>');
             }

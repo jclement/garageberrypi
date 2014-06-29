@@ -1,5 +1,6 @@
 {
     "webcamurl": "/tmp/webcam.jpg",
-    "webcamstaticurl": "webcam-static.jpg"
+    "webcamstaticurl": "webcam-static.jpg",
+    "url": "http://localhost:3000"
 }
 

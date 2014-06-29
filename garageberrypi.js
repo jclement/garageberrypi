@@ -82,6 +82,10 @@ garage.on("change", function(state) {
     io.emit('state', state);
 });
 
+garage.on("trigger", function(trigger) {
+    console.log(trigger);
+});
+
 var ioCount = 0;
 io.on('connection', function (socket) {
     client.lrange('log',0,10, function(err, data) {

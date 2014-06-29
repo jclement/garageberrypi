@@ -8,10 +8,12 @@ var nconf = require('nconf');
 var fs = require('fs');
 var redis = require('redis');
 var client = redis.createClient();
+var _ = require('underscore');
 require('colors');
 
 // GBP Libraries
-var session = require('./lib/session.js');
+var session = require('./lib/session');
+var garage = require('./lib/garage').controller;
 
 // GBP Routes
 var routes_root = require('./routes/index');
@@ -65,26 +67,39 @@ io.use(function(socket, next) {
 var log = function(operation, socket) {
     var date = new Date();
     console.log(operation.red + ' by ' + (socket?socket.session.username.blue:'') + ' @ ' + date.toISOString().green + ' - ' + socket.client.request.headers['user-agent'].yellow);
-    io.emit("log", {
+    var message = {
         operation: operation,
         user: socket ? socket.session.username : '',
         date: date,
-        agent: socket? socket.client.request.headers["user-agent"] : ''
-    });
+        agent: socket ? socket.client.request.headers["user-agent"] : ''
+    };
+    io.emit("log", message);
+    client.lpush('log', JSON.stringify(message));
+    client.ltrim('log',0, 500);
 };
+
+garage.on("change", function(state) {
+    io.emit('state', state);
+});
 
 var ioCount = 0;
 io.on('connection', function (socket) {
+    client.lrange('log',0,10, function(err, data) {
+        // pull and send a block of last 10 log messages so new clients have something nice to look at
+        socket.emit('logStart',_.map(data, JSON.parse));
+    });
     log("login", socket);
     socket.broadcast.emit('connectionCount', ++ioCount);
     socket.emit('connectionCount', ioCount);
-    socket.emit('state', {'status':'open','duration':765});
+    socket.emit('state', garage.status());
     socket.emit('updatedPicture');
     socket.on('open', function () {
         log('open', socket);
+        garage.open();
     });
     socket.on('close', function () {
         log('close', socket);
+        garage.close();
     });
     socket.on('disconnect', function () {
         log("logout", socket);

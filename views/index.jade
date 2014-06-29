@@ -16,8 +16,8 @@ block content
         p#message.alert.alert-default
         div(style="text-align: center; padding-bottom: 20px;")
             img(src="webcam.jpg", style="border: 1px solid #000").img-responsive#webcam
-        button.btn.btn-primary.hidden#open_button Open Door
-        button.btn.btn-danger.hidden#close_button Close Door
+        button.btn.btn-primary.hidden.disabled#open_button Open Door
+        button.btn.btn-danger.hidden.disabled#close_button Close Door
         p(style="padding-top: 20px; font-size: 8pt; color: #888;")
             i There are <span id="count"></span> active connections.
         div(style="height: 200px; overflow-y: scroll").table-responsive

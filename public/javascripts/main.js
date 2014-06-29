@@ -22,7 +22,7 @@ $(function () {
                 $("#message")
                     .html("Door has been <b>open</b> for " + duration + ".")
                     .removeClass("alert-warning")
-                    .removeClass("alert-default")
+                    .removeClass("alert-info")
                     .addClass("alert-danger");
             } else if (state.status === 'closed') {
                 $("#open_button").removeClass("hidden");
@@ -30,7 +30,7 @@ $(function () {
                 $("#message")
                     .html("Door is currently <b>closed</b>.")
                     .removeClass("alert-warning")
-                    .addClass("alert-default")
+                    .addClass("alert-info")
                     .removeClass("alert-danger");
             } else if (state.status === 'moving') {
                 $("#open_button").addClass("hidden");
@@ -38,7 +38,7 @@ $(function () {
                 $("#message")
                     .html("Door is currently <b>moving</b>.")
                     .addClass("alert-warning")
-                    .removeClass("alert-default")
+                    .removeClass("alert-info")
                     .removeClass("alert-danger");
             }
         };
@@ -51,9 +51,12 @@ $(function () {
             $("#count").text(count);
         };
 
-        var log = function (message) {
+        var buildLogRow = function(message) {
+
+        }
+
+        var log = function (message, append) {
             var row = $("<tr></tr>");
-            row.hide();
             row.append('<td>' +
                 (new Date(message.date)).toLocaleDateString() + ' ' +
                 (new Date(message.date)).toLocaleTimeString()
@@ -72,17 +75,30 @@ $(function () {
             }
             row.append('<td>' + _.escape(message.user) + '</td>');
             row.append('<td>' + _.escape(message.agent) + '</td>');
-            $("#log").prepend(row);
-            row.fadeIn();
+            if (append) {
+                $("#log").append(row);
+            } else {
+                row.hide();
+                $("#log").prepend(row);
+                row.fadeIn();
+            }
         };
 
         // open socket
         var socket = io.connect('?token=' + token);
+        socket.on('state', updateState);
+        socket.on('updatedPicture', updatePicture);
+        socket.on('connectionCount', updateCount);
+        socket.on('log', log);
+        socket.on('logStart', function(data) {
+            _.each(data, function(m) {log(m, true);})
+        });
         socket.on("connect", function () {
-            socket.on('state', updateState);
-            socket.on('updatedPicture', updatePicture);
-            socket.on('connectionCount', updateCount);
-            socket.on('log', log);
+            $("button").removeClass("disabled") ;
+            $("#log > tr").remove();
+        });
+        socket.on("disconnect", function() {
+           $("button").addClass("disabled") ;
         });
 
         $("#open_button").click(function () {

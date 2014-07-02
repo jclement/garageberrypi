@@ -91,7 +91,6 @@ $(function () {
             }
             row.append('<td>' + _.escape(message.user) + '</td>');
             row.append('<td>' + _.escape(message.message) + '</td>');
-            row.append('<td>' + _.escape(message.agent) + '</td>');
 
             if (append) {
                 $("#log").append(row);

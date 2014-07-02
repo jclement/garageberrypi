@@ -66,13 +66,14 @@ io.use(function(socket, next) {
 
 // Log helper.  Logs actions to redis, console and all active clients
 var log = function(operation, socket) {
+    if (!socket || !socket.client || !socket.session) {return;}
     var date = new Date();
-    console.log(operation.red + ' by ' + (socket?socket.session.username.blue:'') + ' @ ' + date.toISOString().green + ' - ' + socket.client.request.headers['user-agent'].yellow);
+    console.log(operation.red + ' by ' + socket.session.username.blue + ' @ ' + date.toISOString().green + ' - ' + socket.client.request.headers['user-agent'].yellow);
     var message = {
         operation: operation,
-        user: socket ? socket.session.username : '',
+        user: socket.session.username ,
         date: date,
-        agent: socket ? socket.client.request.headers["user-agent"] : ''
+        agent: socket.client.request.headers["user-agent"] 
     };
     io.emit("log", message);
     client.lpush('log', JSON.stringify(message));
@@ -82,6 +83,10 @@ var log = function(operation, socket) {
 garage.on("change", function(state) {
     io.emit('state', state);
 });
+
+//setInterval(function() {
+//     io.emit('state', garage.status());
+// }, 2000);
 
 garage.on("trigger", function(trigger) {
     if (trigger.state === 'open') {

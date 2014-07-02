@@ -1,5 +1,12 @@
 $(function () {
 
+    var tick = function() {
+    };
+
+    setInterval(function() {
+      tick();
+    }, 1000);
+
     var login = function () {
         $("#login").removeClass("hidden");
         $("#logout_button").addClass("hidden");
@@ -11,20 +18,25 @@ $(function () {
 
         var updateState = function (state) {
             if (state.status === 'open') {
-                var duration;
-                if (state.duration > 60) {
-                    duration = Math.round(state.duration / 60) + ' minutes';
-                } else {
-                    duration = state.duration + ' seconds';
-                }
+                var start = new Date();
+                tick = function() {
+                  var duration = state.duration + Math.round((new Date().getTime() - start.getTime())/1000);
+                  if (duration > 60) {
+                      $("#message").html("Door has been <b>open</b> for " + Math.round(duration/60) + " minutes and " + (duration % 60)+ " seconds.")
+                  } else {
+                      $("#message").html("Door has been <b>open</b> for " + duration + " seconds.")
+                  }
+
+                };
+                tick();
                 $("#open_button").addClass("hidden");
                 $("#close_button").removeClass("hidden");
                 $("#message")
-                    .html("Door has been <b>open</b> for " + duration + ".")
                     .removeClass("alert-warning")
                     .removeClass("alert-info")
                     .addClass("alert-danger");
             } else if (state.status === 'closed') {
+                tick = function() {};
                 $("#open_button").removeClass("hidden");
                 $("#close_button").addClass("hidden");
                 $("#message")
@@ -33,6 +45,7 @@ $(function () {
                     .addClass("alert-info")
                     .removeClass("alert-danger");
             } else if (state.status === 'moving') {
+                tick = function() {};
                 $("#open_button").addClass("hidden");
                 $("#close_button").addClass("hidden");
                 $("#message")

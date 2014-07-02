@@ -16,11 +16,13 @@ router.get('/webcam.jpg', function(req, res) {
     res.writeHead(200, {'Content-type':'image/jpeg'});
     if (token) {
         session.verify(token, function(isValid) {
-            if (isValid) {
+            fs.exists(nconf.get("webcamurl"), function(exists) {
+              if (exists && isValid) {
                 fs.createReadStream(nconf.get("webcamurl")).pipe(res);
-            } else {
+              } else {
                 fs.createReadStream(nconf.get("webcamstaticurl")).pipe(res);
-            }
+              }
+            });
         });
     } else {
         fs.createReadStream(nconf.get("webcamstaticurl")).pipe(res);

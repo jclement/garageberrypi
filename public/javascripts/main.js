@@ -22,7 +22,7 @@ $(function () {
                 tick = function() {
                   var duration = state.duration + Math.round((new Date().getTime() - start.getTime())/1000);
                   if (duration > 60) {
-                      $("#message").html("Door has been <b>open</b> for " + Math.round(duration/60) + " minutes and " + (duration % 60)+ " seconds.")
+                      $("#message").html("Door has been <b>open</b> for " + Math.round(duration/60) + " minutes and " + Math.round(duration % 60)+ " seconds.")
                   } else {
                       $("#message").html("Door has been <b>open</b> for " + duration + " seconds.")
                   }

@@ -70,6 +70,7 @@ $(function () {
 
         var log = function (message, append) {
             var row = $("<tr></tr>");
+
             row.append('<td>' +
                 (new Date(message.date)).toLocaleDateString() + ' ' +
                 (new Date(message.date)).toLocaleTimeString()
@@ -89,7 +90,9 @@ $(function () {
                 row.append('<td><span class="label label-default">' + _.escape(message.operation) + '</span></td>');
             }
             row.append('<td>' + _.escape(message.user) + '</td>');
+            row.append('<td>' + _.escape(message.message) + '</td>');
             row.append('<td>' + _.escape(message.agent) + '</td>');
+
             if (append) {
                 $("#log").append(row);
             } else {

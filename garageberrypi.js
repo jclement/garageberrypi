@@ -65,8 +65,7 @@ io.use(function(socket, next) {
 });
 
 // Log helper.  Logs actions to redis, console and all active clients
-var log = function(operation, socket) {
-    if (!socket || !socket.client || !socket.session) {return;}
+var logAction = function(operation, socket) {
     var date = new Date();
     console.log(operation.red + ' by ' + socket.session.username.blue + ' @ ' + date.toISOString().green + ' - ' + socket.client.request.headers['user-agent'].yellow);
     var message = {
@@ -80,18 +79,38 @@ var log = function(operation, socket) {
     client.ltrim('log',0, 500);
 };
 
-garage.on("change", function(state) {
-    io.emit('state', state);
-});
+var logSystem = function(operation, message) {
+    var date = new Date();
+    var message = {
+        operation: operation || 'notice',
+        date: date,
+        message: message,
+        user: '<system>'
+    };
+    io.emit("log", message);
+    client.lpush('log', JSON.stringify(message));
+    client.ltrim('log',0, 500);
+};
 
-//setInterval(function() {
-//     io.emit('state', garage.status());
-// }, 2000);
+garage.on("change", function(changeParams) {
+    // on changes to door state, log and notify clients
+    if (!changeParams.userInitiated) {
+      var status = changeParams.state.status;
+      if (status) {
+        if (status === 'open') {
+          logSystem('open');
+        } else if (status === 'closed') {
+          logSystem('close');
+        } 
+      }
+    }
+    io.emit('state', changeParams.state);
+});
 
 garage.on("trigger", function(trigger) {
     if (trigger.state === 'open') {
         var message = 'Door left open for ' + trigger.threshold + ' seconds.';
-        log('notice', message);
+        logSystem('notice',message);
         client.lrange('config:pushover', 0, 1000, function(err, data) {
             if (!err && data.length > 0) {
                 _.each(_.map(data, JSON.parse), function(rec) {
@@ -117,21 +136,21 @@ io.on('connection', function (socket) {
         // pull and send a block of last 10 log messages so new clients have something nice to look at
         socket.emit('logStart',_.map(data, JSON.parse));
     });
-    log("login", socket);
+    logAction("login", socket);
     socket.broadcast.emit('connectionCount', ++ioCount);
     socket.emit('connectionCount', ioCount);
     socket.emit('state', garage.status());
     socket.emit('updatedPicture');
     socket.on('open', function () {
-        log('open', socket);
+        logAction('open', socket);
         garage.open();
     });
     socket.on('close', function () {
-        log('close', socket);
+        logAction('close', socket);
         garage.close();
     });
     socket.on('disconnect', function () {
-        log("logout", socket);
+        logAction("logout", socket);
         socket.broadcast.emit('connectionCount', --ioCount);
     });
 });
@@ -176,5 +195,6 @@ app.use(function (err, req, res, next) {
     });
 });
 
+logSystem('notice', "GarageberryPi started.");
 
 module.exports = {app: app, http: http};

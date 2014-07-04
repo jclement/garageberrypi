@@ -160,6 +160,7 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use("/lib", express.static(path.join(__dirname, 'bower_components')));
 
 app.use('/', routes_root);
 app.use('/api/auth', routes_api_auth);

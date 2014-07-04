@@ -13,7 +13,6 @@
         "body-parser": "~1.0.0",
         "debug": "~0.7.4",
         "jade": "~1.3.0",
-        "express-session": "*",
         "colors": "*",
         "gpio": "*",
         "socket.io": "~1.0.0",

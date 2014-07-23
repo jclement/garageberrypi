@@ -102,7 +102,7 @@ $(function () {
         };
 
         // open socket
-        var socket = io.connect('?token=' + token);
+        var socket = io.connect('socket.io?token=' + token);
         socket.on('state', updateState);
         socket.on('updatedPicture', updatePicture);
         socket.on('connectionCount', updateCount);

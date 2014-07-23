@@ -130,7 +130,7 @@ $(function () {
     };
 
     $("#login_button").click(function () {
-            $.post("/api/auth/login", {
+            $.post("api/auth/login", {
                 username: $("input#username").val(),
                 password: $("input#password").val()
             }, function (data, status, xhr) {
@@ -147,7 +147,7 @@ $(function () {
         }
     );
     $("#logout_button").click(function () {
-        $.post("/api/auth/logout", {
+        $.post("api/auth/logout", {
             token: $.jStorage.get('token')
         }, function (data, status, xhr) {
             if (data.status) {
@@ -161,7 +161,7 @@ $(function () {
 
     // Determine if we have a valid session
     if ($.jStorage.get('token')) {
-        $.post("/api/auth/verify", {
+        $.post("api/auth/verify", {
             token: $.jStorage.get('token')
         }, function (data, status, xhr) {
             if (data.status) {

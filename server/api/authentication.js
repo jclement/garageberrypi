@@ -6,10 +6,10 @@ router.post('/login', function (req, res) {
     var username = (req.body.username || '').toLowerCase();
     var password = req.body.password;
     session.login(username, password).then(
-        function(token) {
+        function (token) {
             res.json({status: true, token: token});
         },
-        function(message) {
+        function (message) {
             res.json({status: false, message: message});
         });
 });
@@ -17,10 +17,10 @@ router.post('/login', function (req, res) {
 router.post('/verify', function (req, res) {
     var token = req.body.token;
     session.verify(token).then(
-        function() {
+        function () {
             res.json({status: true});
         },
-        function(message) {
+        function (message) {
             res.json({status: false, message: message});
         });
 });

@@ -2,7 +2,10 @@
 
 * RaspberryPi
 * Node
-* Redis
+
+## Startup
+
+    
 
 ## Installation
 

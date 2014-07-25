@@ -11,6 +11,6 @@ if (!nconf.get('jwtSecret')) {
         nconf.set('jwtSecret', buf.toString('hex'));
     });
 }
-module.exports = function(k) {
+module.exports = function (k) {
     return nconf.get(k);
 };

@@ -9,7 +9,10 @@
     },
 
     "users": [
-        {"name": "demo", "password": "demo"}
+        {
+            "name": "demo",
+            "password": "demo"
+        }
     ],
 
     "gpio": {
@@ -22,8 +25,11 @@
     },
 
     "notify": {
-      "pushover": [
-      {"user":"...", "token": "..."}
+        "pushover": [
+            {
+                "user": "...",
+                "token": "..."
+            }
         ]
     }
 }

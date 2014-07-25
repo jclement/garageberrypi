@@ -12,7 +12,6 @@
         "jquery": "2.1.*",
         "underscore": "1.6.*",
         "bootstrap": "3.2.*",
-        "socket.io-client": "1.0.*",
         "angular": "*",
         "angular-local-storage": "*"
     },

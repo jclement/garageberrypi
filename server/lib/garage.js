@@ -15,11 +15,11 @@ var DOOR_DELAY = config('garage:move_time') || 12;
 // State of door
 var state = {
     serial: (new Date()).valueOf(),
-    door:'unknown',
+    door: 'unknown',
     timestamp: new Date()
 };
 
-var setState = function(val) {
+var setState = function (val) {
     if (val === state.door) return;
     var tmp = {};
     tmp.serial = new Date().valueOf();
@@ -29,41 +29,49 @@ var setState = function(val) {
     state = tmp;
 };
 
-doorStatus.watch(function(err, value) {
-  if (state.door !== 'moving') {
-    setState(value ? 'closed': 'open');
-  }
+doorStatus.watch(function (err, value) {
+    if (state.door !== 'moving') {
+        setState(value ? 'closed' : 'open');
+    }
 });
 
-var updateState = function() {
-  doorStatus.read(function(err, value) {
-    setState(value ? 'closed': 'open');
-  });
+var updateState = function () {
+    doorStatus.read(function (err, value) {
+        setState(value ? 'closed' : 'open');
+    });
 };
 updateState();
 
-controller.open = function() {
+controller.open = function () {
     if (state.door === 'closed') {
         setState('moving');
         doorToggle.writeSync(1);
-        setTimeout(function() {doorToggle.writeSync(0);}, 500);
-        setTimeout(function () {updateState(); }, DOOR_DELAY * 1000);
+        setTimeout(function () {
+            doorToggle.writeSync(0);
+        }, 500);
+        setTimeout(function () {
+            updateState();
+        }, DOOR_DELAY * 1000);
     }
 };
 
-controller.close = function() {
+controller.close = function () {
     if (state.door === 'open') {
         setState('moving');
         doorToggle.writeSync(1);
-        setTimeout(function() {doorToggle.writeSync(0);}, 500);
-        setTimeout(function () {updateState(); }, DOOR_DELAY * 1000);
+        setTimeout(function () {
+            doorToggle.writeSync(0);
+        }, 500);
+        setTimeout(function () {
+            updateState();
+        }, DOOR_DELAY * 1000);
     }
 };
 
-controller.state = function() {
-  var tmp = {};
-  _.extend(tmp, state);
-   return tmp;
+controller.state = function () {
+    var tmp = {};
+    _.extend(tmp, state);
+    return tmp;
 };
 
 module.exports = controller;

@@ -3,7 +3,7 @@ var _ = require('underscore');
 var q = require('q');
 var config = require('./config');
 
-var buildToken = function(username) {
+var buildToken = function (username) {
     return jwt.encode({
         username: username,
         timestamp: new Date()
@@ -47,11 +47,11 @@ var verify = function (token) {
 var enforce_valid_token = function (req, res, next) {
     var token = req.body.token;
     verify(token).then(
-        function(data) {
+        function (data) {
             req.session = data;
             next();
         },
-        function(err) {
+        function (err) {
             next(err);
         });
 };

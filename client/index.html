@@ -30,7 +30,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#">GarageberryPi<sup>2.0</sup></a>
+            <a class="navbar-brand" href="#">GarageberryPi<sup>2</sup></a>
             <button class="btn btn-success navbar-btn" ng-disabled="ctrl.working" ng-click="ctrl.open()"
                     ng-show="ctrl.isAuthenticated() && ctrl.state.door === 'closed'">Open Door
             </button>
@@ -88,7 +88,7 @@
             {{ctrl.readableDuration()}}.
         </div>
         <div class="alert alert-warning" ng-show="ctrl.state.door === 'moving'">Door is currently moving</div>
-        <div><img ng-src="{{ctrl.state.img}}" class="img-responsive img-center"></div>
+        <div><img style="border: 1px solid #000" ng-src="{{ctrl.state.img}}" class="img-responsive img-center"></div>
     </div>
 
 </div>

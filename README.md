@@ -28,7 +28,7 @@ GarageberriPi makes use of one input (PIN 4 PULLDOWN) and one output pin (25).
 
 <img src="http://d.pr/i/6pxp+">
 
-The `start` script automatically uses `gpio-admin` to export the two pins.
+The `start` script automatically uses `gpio-admin` to export the two pins so that the `pi` user can access them (also attaches internal pull-down to PIN 4).
 
 The door switch is a sketchy contact switch made out of coat hanger and pipe strapping like so:
 
@@ -97,7 +97,7 @@ $ cp config.sample.json config.json
 
 Update the settings in `config.json` to match your environment.  Of particular interest:
 
-* `jwtSecret`: This is used to encrypt the authentication tokens.  It must be a secure random string!  If it's left as null, a random string will automatically be generated.
+* `jwtSecret`: This is used to encrypt the authentication tokens (stored client-side local storage).  It must be a secure random string!  If it's left as null, a random string will automatically be generated on startup.
 * `users`: Contains a list of users authorized to connect.  I started off with some fancy bcrypt implementation but it turns out that is rather expensive for my poor little RPi.
 * `garage:move_time`: I don't have a sensor to actually detect when the door is moving so this is an approximate travel time for the door.
 * `notify:pushover`: Contains a list of user/token pairs for notifying users via. pushover.

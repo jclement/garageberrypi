@@ -28,6 +28,7 @@ app.controller('gbpController', function ($http, $timeout, $interval, localStora
     })();
 
     ctrl.loginForm = {};
+    ctrl.loginError = null;
 
     ctrl.user = function () {
         return auth && auth.username;
@@ -38,6 +39,7 @@ app.controller('gbpController', function ($http, $timeout, $interval, localStora
     };
 
     ctrl.login = function () {
+        ctrl.loginError = null;
         $http.post('api/auth/login', ctrl.loginForm)
             .success(function (data) {
                 if (data.status) {
@@ -46,6 +48,8 @@ app.controller('gbpController', function ($http, $timeout, $interval, localStora
                         username: ctrl.loginForm.username
                     };
                     localStorageService.set('auth', auth);
+                } else {
+                  ctrl.loginError = data.message;
                 }
                 ctrl.loginForm = {};
                 start_refresh();

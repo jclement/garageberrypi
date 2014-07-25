@@ -53,6 +53,7 @@
             <h3 class="panel-title">Authenticate Yourself Human!</h3>
         </div>
         <div class="panel-body">
+            <div class="alert alert-danger" ng-show="ctrl.loginError">{{ctrl.loginError}}</div>
             <form name="loginForm" class="form form-horizontal" ng-submit="loginForm.$valid && ctrl.login()">
                 <div class="form-group">
                     <label for="username" class="col-sm-2 control-label">Username</label>

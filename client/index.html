@@ -96,10 +96,10 @@
         <div class="alert alert-warning" ng-show="ctrl.state.door === 'moving'">Door is currently moving</div>
         <div><img style="border: 1px solid #000" ng-src="{{ctrl.state.img}}" class="img-responsive img-center"></div>
         <div style="margin-top: 20px">
-            <button class="btn btn-success btn-block" ng-disabled="ctrl.working" ng-click="ctrl.open()"
+            <button class="btn btn-success btn-large btn-block" ng-disabled="ctrl.working" ng-click="ctrl.open()"
                     ng-show="ctrl.isAuthenticated() && ctrl.state.door === 'closed'">Open Door
             </button>
-            <button class="btn btn-danger btn-block" ng-disabled="ctrl.working" ng-click="ctrl.close()"
+            <button class="btn btn-danger btn-large btn-block" ng-disabled="ctrl.working" ng-click="ctrl.close()"
                     ng-show="ctrl.isAuthenticated() && ctrl.state.door === 'open'">Close Door
             </button>
         </div>

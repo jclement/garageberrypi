@@ -1,14 +1,14 @@
 # GarageberryPi
 
-A RaspberryPi based project to control a garage door and monitor one or more phones (via [Pushover](http://pushover.net)) if the door is left open for any length of time.
+A RaspberryPi based project to control a garage door and notify one or more phones (via [Pushover](http://pushover.net)) if the door is left open for any length of time.
 
 It was written for several reasons:
 
-# Avoid those trips back to the house when we're 5 minutes away and can't remember if the door was closed
-# Avoid those times when I come home from work and the door is open and nobody can remember how long its been like that
-# We only have one working garage door opener which is always in the other car
+* Avoid those trips back to the house when we're 5 minutes away and can't remember if the door was closed
+* Avoid those times when I come home from work and the door is open and nobody can remember how long its been like that
+* We only have one working garage door opener which is always in the other car
 
-It has a very simple UI written in Angular + Bootstrap.
+It has a very simple UI written in Angular + Bootstrap (yes, my garage is a disaster).
 
 <img src="http://d.pr/i/xBH3+">
 
@@ -84,22 +84,26 @@ Copy the `config.sample.json` to `config.json`.
 $ cp config.sample.json config.json
 ```
 
+Update the settings in `config.json` to match your environment.  Of particular interest:
+
+* `jwtSecret`: This is used to encrypt the authentication tokens.  It must be a secure random string!  If it's left as null, a random string will automatically be generated.
+* `users`: Contains a list of users authorized to connect.  I started off with some fancy bcrypt implementation but it turns out that is rather expensive for my poor little RPi.
+* `garage:move_time`: I don't have a sensor to actually detect when the door is moving so this is an approximate travel time for the door.
+* `notify:pushover`: Contains a list of user/token pairs for notifying users via. pushover.
+
 ```json
 {
     "PORT": 3000,
     "url": "https://adipose.net/gbp/",
 
-    "jwtSecret": "test",
+    "jwtSecret": null,
 
     "webcam": {
         "url": "/var/run/shm/webcam.jpeg"
     },
 
     "users": [
-        {
-            "name": "demo",
-            "password": "demo"
-        }
+        {"name": "demo", "password": "demo"}
     ],
 
     "gpio": {
@@ -113,10 +117,7 @@ $ cp config.sample.json config.json
 
     "notify": {
         "pushover": [
-            {
-                "user": "...",
-                "token": "..."
-            }
+            {"user": "...", "token": "..."}
         ]
     }
 }

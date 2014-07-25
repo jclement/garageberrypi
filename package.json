@@ -15,6 +15,7 @@
         "onoff": "*",
         "underscore": "*",
         "jwt-simple": "*",
+        "request": "*",
         "q": "*"
     }
 }

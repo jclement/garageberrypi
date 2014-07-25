@@ -77,7 +77,7 @@
 
     <div ng-show="ctrl.isAuthenticated()" ng-show="ctrl.state">
         <div class="alert alert-success" ng-show="ctrl.state.door === 'closed'">Door is currently closed</div>
-        <div class="alert alert-danger" ng-show="ctrl.state.door === 'open'">Door is currently open</div>
+        <div class="alert alert-danger" ng-show="ctrl.state.door === 'open'">Door is currently open and has been for {{ctrl.readableDuration()}}.</div>
         <div class="alert alert-warning" ng-show="ctrl.state.door === 'moving'">Door is currently moving</div>
         <div><img ng-src="{{ctrl.state.img}}" class="img-responsive img-center"></div>
     </div>

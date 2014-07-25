@@ -4,7 +4,7 @@ app.config(['localStorageServiceProvider', function(localStorageServiceProvider)
     localStorageServiceProvider.setPrefix("gbp");
 }]);
 
-app.controller('gbpController', function($http, $timeout, localStorageService) {
+app.controller('gbpController', function($http, $timeout, $interval, localStorageService) {
 
     var ctrl = this;
 
@@ -62,6 +62,22 @@ app.controller('gbpController', function($http, $timeout, localStorageService) {
     ctrl.state = null;
     ctrl.working = false;
 
+    // kick state every second so clock updates
+    $interval(function() {}, 1000);
+    var stateTimestamp = null;
+    ctrl.readableDuration = function() {
+      if (!ctrl.state || stateTimestamp === null) {return 'NA';}
+      // duration in current state since at time of API call
+      var duration = ctrl.state.duration;
+      // + duration since laste API call
+      duration += Math.round((new Date().getTime() - stateTimestamp.getTime())/1000);
+      if (duration > 60) {
+        return Math.round(duration/60) + " minutes and " + (duration % 60) + " seconds"
+      } else {
+        return duration + " seconds"
+      }
+    };
+
     var start_refresh = function() {
        var refresh = function() {
            // assuming we are authenticated, pull status from service
@@ -69,6 +85,7 @@ app.controller('gbpController', function($http, $timeout, localStorageService) {
            $http.post('api/garage/status', {token: auth.token, serial: ctrl.state && ctrl.state.serial})
                .success(function (data) {
                    ctrl.working = false;
+                   stateTimestamp = new Date();
                    ctrl.state = data;
                    $timeout(refresh, 500);
                })

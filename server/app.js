@@ -4,15 +4,42 @@ var http = require('http');
 var bodyParser = require('body-parser');
 var path = require('path');
 var logger = require('morgan');
+var fs = require('fs');
+var _ = require('underscore');
+
 var session = require('./lib/session');
 var garage = require('./lib/garage');
-var config = require('./lib/config.js');
-var fs = require('fs');
+var watcher = require('./lib/watcher');
+var config = require('./lib/config');
+var request = require('request');
 
 var route_authentication = require('./api/authentication');
 var route_garage = require('./api/garage');
 
 var app = express();
+
+var notify = function(duration) {
+  var msg = {
+    message: 'Door has been open for ' + Math.round(duration) + ' seconds.',
+    title: 'GarageberryPi',
+    url: config('url'),
+    "url_title": "Open GarageberryPi"
+  };
+  if (duration > 60) {
+    msg.message = 'Door has been open for ' + Math.round(duration/60) + ' minutes.';
+  }
+  _.each(config("notify:pushover"), function(settings) {
+    var tmp = {};
+    _.extend(tmp, msg, settings);
+    request.post('https://api.pushover.net/1/messages.json').form(tmp);
+  });
+};
+
+watcher.register('open', 10, notify);
+watcher.register('open', 60, notify);
+watcher.register('open', 60*5, notify);
+watcher.register('open', 60*10, notify);
+watcher.register('open', 60*30, notify);
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());

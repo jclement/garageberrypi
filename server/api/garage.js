@@ -21,6 +21,7 @@ router.post('/status', function (req, res) {
     var test = function() {
       var status = garage.state(); 
       status.img = 'webcam.jpg?token=' + req.body.token + '&serial=' + webcam_serial;
+      status.duration = Math.round((new Date().getTime() - status.timestamp.getTime())/1000);
       // if webcam image has a later serial number, use that
       if (webcam_serial > status.serial) {
         status.serial = webcam_serial;

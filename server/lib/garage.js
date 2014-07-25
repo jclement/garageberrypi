@@ -2,6 +2,7 @@ var Gpio = require('onoff').Gpio;
 var events = require('events');
 var logger = require('morgan');
 var config = require('./config');
+var _ = require('underscore');
 
 var controller = new events.EventEmitter();
 
@@ -13,9 +14,9 @@ var DOOR_DELAY = config('garage:move_time') || 12;
 
 // State of door
 var state = {
-    serial: null,
+    serial: (new Date()).valueOf(),
     door:'unknown',
-    timestamp: null
+    timestamp: new Date()
 };
 
 var setState = function(val) {
@@ -30,13 +31,13 @@ var setState = function(val) {
 
 doorStatus.watch(function(err, value) {
   if (state.door !== 'moving') {
-    setState(value ? 'open': 'closed');
+    setState(value ? 'closed': 'open');
   }
 });
 
 var updateState = function() {
   doorStatus.read(function(err, value) {
-    setState(value ? 'open': 'closed');
+    setState(value ? 'closed': 'open');
   });
 };
 updateState();
@@ -60,7 +61,9 @@ controller.close = function() {
 };
 
 controller.state = function() {
-   return state;
+  var tmp = {};
+  _.extend(tmp, state);
+   return tmp;
 };
 
 module.exports = controller;

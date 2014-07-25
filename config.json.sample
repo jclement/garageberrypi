@@ -1,5 +1,6 @@
 {
     "PORT": 3000,
+    "url": "https://adipose.net/gbp/",
 
     "jwtSecret": "test",
 
@@ -18,5 +19,11 @@
 
     "garage": {
         "move_time": 12
+    },
+
+    "notify": {
+      "pushover": [
+      {"user":"...", "token": "..."}
+        ]
     }
 }

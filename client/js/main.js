@@ -10,6 +10,7 @@ app.controller('gbpController', function ($http, $timeout, $interval, localStora
 
     /* ====== AUTHENTICATION =============================================== */
 
+    var initalized = false;
     var auth = null;
 
     (function () {
@@ -21,9 +22,11 @@ app.controller('gbpController', function ($http, $timeout, $interval, localStora
                     if (data.status) {
                         auth = savedToken;
                         start_refresh();
-
                     }
+                    initalized = true;
                 })
+        } else {
+            initalized = true;
         }
     })();
 

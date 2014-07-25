@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, max-scale=1">
+    <meta name="description" content="RaspberryPi based garage controller">
+    <meta name="author" content="Jeff Clement">
+    <link rel="apple-touch-icon" sizes="120,120" href="images/touch-icon-iphone-retina.png">
+    <link rel="apple-touch-icon" sizes="152,152" href="images/touch-icon-ipad-retina.png">
+    <link rel="icon" href="favicon.ico">
+
+    <title>GarageberryPi</title>
+
+    <link href="lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="css/main.css" rel="stylesheet">
+</head>
+
+<body ng-app="gbpApp" ng-controller="gbpController as ctrl">
+
+<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">GarageberryPi</a>
+            <button class="btn btn-success navbar-btn" ng-disabled="ctrl.working" ng-click="ctrl.open()" ng-show="ctrl.isAuthenticated() && ctrl.state.door === 'closed'">Open Door</button>
+            <button class="btn btn-danger navbar-btn" ng-disabled="ctrl.working" ng-click="ctrl.close()" ng-show="ctrl.isAuthenticated() && ctrl.state.door === 'open'">Close Door</button>
+        </div>
+        <div class="collapse navbar-collapse">
+            <ul class="nav navbar-nav pull-right">
+                <li><a href="#" ng-click="ctrl.logout()" ng-show="ctrl.isAuthenticated()">Logout ({{ctrl.user()}})</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+
+    <div class="panel panel-primary" ng-hide="ctrl.isAuthenticated()">
+        <div class="panel-heading">
+            <h3 class="panel-title">Authenticate Yourself Human!</h3>
+        </div>
+        <div class="panel-body">
+            <form name="loginForm" class="form form-horizontal" ng-submit="loginForm.$valid && ctrl.login()">
+                <div class="form-group">
+                    <label for="username" class="col-sm-2 control-label">Username</label>
+
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" placeholder="Username" id="username"
+                               ng-model="ctrl.loginForm.username" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="password" class="col-sm-2 control-label">Password</label>
+
+                    <div class="col-sm-10">
+                        <input type="password" class="form-control" placeholder="Password" id="password"
+                               ng-model="ctrl.loginForm.password" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button type="submit" ng-disabled="loginForm.$invalid" class="btn btn-default">Sign in</button>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    <div ng-show="ctrl.isAuthenticated()" ng-show="ctrl.state">
+        <div class="alert alert-success" ng-show="ctrl.state.door === 'closed'">Door is currently closed</div>
+        <div class="alert alert-danger" ng-show="ctrl.state.door === 'open'">Door is currently open</div>
+        <div class="alert alert-warning" ng-show="ctrl.state.door === 'moving'">Door is currently moving</div>
+        <div><img ng-src="{{ctrl.state.img}}" class="img-responsive img-center"></div>
+    </div>
+
+</div>
+
+<script src="lib/jquery/dist/jquery.min.js"></script>
+<script src="lib/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="lib/underscore/underscore.js"></script>
+<script src="lib/angular/angular.min.js"></script>
+<script src="lib/angular-local-storage/angular-local-storage.min.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

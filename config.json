@@ -1,0 +1,22 @@
+{
+    "PORT": 3000,
+
+    "jwtSecret": null,
+
+    "webcam": {
+        "url": "/run/shm/webcam.jpg"
+    },
+
+    "users": [
+        {"name": "demo", "password": "demo"}
+    ],
+
+    "gpio": {
+        "toggle_pin": 25,
+        "status_pin": 4
+    },
+
+    "garage": {
+        "move_time": 12
+    }
+}

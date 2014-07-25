@@ -12,9 +12,9 @@
         "jquery": "2.1.*",
         "underscore": "1.6.*",
         "bootstrap": "3.2.*",
-        "jstorage": "0.4.*",
         "socket.io-client": "1.0.*",
-        "angular": "*"
+        "angular": "*",
+        "angular-local-storage": "*"
     },
     "ignore": [
         "**/.*",

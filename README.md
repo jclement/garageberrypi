@@ -24,7 +24,15 @@ It has a very simple UI written in Angular + Bootstrap (yes, my garage is a disa
 
 GarageberriPi makes use of one input (PIN 4 PULLDOWN) and one output pin (25).
 
+<img src="http://d.pr/i/d6Jt+">
+
+<img src="http://d.pr/i/6pxp+">
+
 The `start` script automatically uses `gpio-admin` to export the two pins.
+
+The door switch is a sketchy contact switch made out of coat hanger and pipe strapping like so:
+
+<img src="http://d.pr/i/8m51+">
 
 ## Installation & Startup
 
@@ -39,7 +47,7 @@ $ bower install
 
 ### Webcam
 
-I use the `webcam` package (Raspbian) and my `.webcamrc` looks like this.  I write to `/run/shm/webcam.jpeg` (memory) so that I'm not clobbering the SD card non-stop with images.
+I use the `webcam` package (Raspbian) and my `.webcamrc` looks like this.  I write to `/run/shm/webcam.jpeg` (memory) so that I'm not clobbering the SD card non-stop with thousands of writes.
 
 ```
 [grab]

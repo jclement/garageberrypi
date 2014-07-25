@@ -66,11 +66,14 @@ app.controller('gbpController', function($http, $timeout, localStorageService) {
        var refresh = function() {
            // assuming we are authenticated, pull status from service
            if (!auth) return;
-           $http.post('api/garage/status', {token: auth.token})
+           $http.post('api/garage/status', {token: auth.token, serial: ctrl.state && ctrl.state.serial})
                .success(function (data) {
                    ctrl.working = false;
                    ctrl.state = data;
-                   $timeout(refresh, 1000);
+                   $timeout(refresh, 500);
+               })
+               .error(function() {
+                   $timeout(refresh, 2000);
                });
        };
         refresh();
@@ -79,11 +82,13 @@ app.controller('gbpController', function($http, $timeout, localStorageService) {
     ctrl.open = function() {
         ctrl.working = true;
         $http.post('api/garage/open', {token: auth.token});
+        return false;
     };
 
     ctrl.close = function() {
         ctrl.working = true;
         $http.post('api/garage/close', {token: auth.token});
+        return false;
     };
 
 });

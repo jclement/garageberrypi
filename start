@@ -1,0 +1,5 @@
+#!/bin/sh
+gpio-admin export 4 pulldown
+gpio-admin export 25
+nodemon -i client server/app.js
+

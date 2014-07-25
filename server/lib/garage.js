@@ -1,66 +1,62 @@
-var gpio = require('pi-gpio');
+var Gpio = require('onoff').Gpio;
 var events = require('events');
 var logger = require('morgan');
+var config = require('./config');
 
 var controller = new events.EventEmitter();
 
-// IO pin used for testing door status.  S/B high for door open.
-var DOOR_STATUS_PIN = nconf.get('gpio:status_pin') || 4;
-
-// IO pin used to toggle garage opener
-var DOOR_TOGGLE_PIN = nconf.get('gpio:toggle_pin') || 25;
+var doorStatus = new Gpio(config('gpio:status_pin') || 4, 'in', 'both');
+var doorToggle = new Gpio(config('gpio:toggle_pin') || 25, 'out');
 
 // time in seconds for door to move
-var DOOR_DELAY = nconf.get('garage:move_time') || 12;
+var DOOR_DELAY = config('garage:move_time') || 12;
 
 // State of door
 var state = {
+    serial: null,
     door:'unknown',
     timestamp: null
 };
 
 var setState = function(val) {
+    if (val === state.door) return;
     var tmp = {};
+    tmp.serial = new Date().valueOf();
     tmp.door = val;
     tmp.timestamp = new Date();
+    controller.emit('changed', tmp);
     state = tmp;
 };
 
+doorStatus.watch(function(err, value) {
+  if (state.door !== 'moving') {
+    setState(value ? 'open': 'closed');
+  }
+});
+
 var updateState = function() {
-    gpio.read(DOOR_STATUS_PIN, function(err, val) {
-        if (!err) {
-            setState(val === 1? 'open': 'closed');
-        }
-    });
+  doorStatus.read(function(err, value) {
+    setState(value ? 'open': 'closed');
+  });
 };
-
-gpio.open(DOOR_STATUS_PIN, 'input pull-up', function(err) {
-    if (err) {
-        logger.format("Unable to open status pin: %s", err);
-    } else {
-        updateState();
-    }
-});
-
-gpio.open(DOOR_TOGGLE_PIN, 'output', function(err) {
-    if (err) {
-        logger.format("Unable to open toggle pin: %s", err);
-    }
-});
-
+updateState();
 
 controller.open = function() {
     if (state.door === 'closed') {
         setState('moving');
-        gpio.write(DOOR_TOGGLE_PIN, 1, function(err) {
-            setTimeout(function () { gpio.write(DOOR_TOGGLE_PIN, 0); }, 500);
-            setTimeout(function () { updateState(); }, DOOR_DELAY * 1000);
-        });
+        doorToggle.writeSync(1);
+        setTimeout(function() {doorToggle.writeSync(0);}, 500);
+        setTimeout(function () {updateState(); }, DOOR_DELAY * 1000);
     }
 };
 
 controller.close = function() {
-
+    if (state.door === 'open') {
+        setState('moving');
+        doorToggle.writeSync(1);
+        setTimeout(function() {doorToggle.writeSync(0);}, 500);
+        setTimeout(function () {updateState(); }, DOOR_DELAY * 1000);
+    }
 };
 
 controller.state = function() {

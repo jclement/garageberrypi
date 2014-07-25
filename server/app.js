@@ -5,7 +5,7 @@ var bodyParser = require('body-parser');
 var path = require('path');
 var logger = require('morgan');
 var session = require('./lib/session');
-//var garage = require('./lib/garage');
+var garage = require('./lib/garage');
 var config = require('./lib/config.js');
 var fs = require('fs');
 

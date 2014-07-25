@@ -1,10 +1,10 @@
 {
     "PORT": 3000,
 
-    "jwtSecret": null,
+    "jwtSecret": "test",
 
     "webcam": {
-        "url": "/run/shm/webcam.jpg"
+        "url": "/var/run/shm/webcam.jpeg"
     },
 
     "users": [

@@ -10,10 +10,10 @@ app.controller('gbpController', function ($http, $timeout, $interval, localStora
 
     /* ====== AUTHENTICATION =============================================== */
 
-    var initalized = false;
     var auth = null;
 
     (function () {
+        ctrl.initialized = false;
         // if we have pre-existing token, verify it to see if it's still good.
         var savedToken = localStorageService.get('auth');
         if (savedToken) {
@@ -23,10 +23,10 @@ app.controller('gbpController', function ($http, $timeout, $interval, localStora
                         auth = savedToken;
                         start_refresh();
                     }
-                    initalized = true;
+                    ctrl.initialized = true;
                 })
         } else {
-            initalized = true;
+            ctrl.initialized = true;
         }
     })();
 

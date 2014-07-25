@@ -4,6 +4,8 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, max-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="description" content="RaspberryPi based garage controller">
     <meta name="author" content="Jeff Clement">
     <link rel="apple-touch-icon" sizes="120,120" href="images/touch-icon-iphone-retina.png">
@@ -31,12 +33,12 @@
                 <span class="icon-bar"></span>
             </button>
             <a class="navbar-brand" href="#">GarageberryPi<sup>2</sup></a>
-            <button class="btn btn-success navbar-btn" ng-disabled="ctrl.working" ng-click="ctrl.open()"
-                    ng-show="ctrl.isAuthenticated() && ctrl.state.door === 'closed'">Open Door
-            </button>
-            <button class="btn btn-danger navbar-btn" ng-disabled="ctrl.working" ng-click="ctrl.close()"
-                    ng-show="ctrl.isAuthenticated() && ctrl.state.door === 'open'">Close Door
-            </button>
+            <!-- <button class="btn btn-success navbar-btn" ng-disabled="ctrl.working" ng-click="ctrl.open()" -->
+            <!--         ng-show="ctrl.isAuthenticated() && ctrl.state.door === 'closed'">Open Door -->
+            <!-- </button> -->
+            <!-- <button class="btn btn-danger navbar-btn" ng-disabled="ctrl.working" ng-click="ctrl.close()" -->
+            <!--         ng-show="ctrl.isAuthenticated() && ctrl.state.door === 'open'">Close Door -->
+            <!-- </button> -->
         </div>
         <div class="collapse navbar-collapse">
             <ul class="nav navbar-nav pull-right">
@@ -47,7 +49,11 @@
     </div>
 </div>
 
-<div class="container" ng-show="initialized">
+<div class="container" ng-hide="ctrl.initialized">
+  <div class="alert alert-info">Loading...</div>
+</div>
+
+<div class="container" ng-show="ctrl.initialized">
 
     <div class="panel panel-primary" ng-hide="ctrl.isAuthenticated()">
         <div class="panel-heading">
@@ -89,6 +95,14 @@
         </div>
         <div class="alert alert-warning" ng-show="ctrl.state.door === 'moving'">Door is currently moving</div>
         <div><img style="border: 1px solid #000" ng-src="{{ctrl.state.img}}" class="img-responsive img-center"></div>
+        <div style="margin-top: 20px">
+            <button class="btn btn-success btn-block" ng-disabled="ctrl.working" ng-click="ctrl.open()"
+                    ng-show="ctrl.isAuthenticated() && ctrl.state.door === 'closed'">Open Door
+            </button>
+            <button class="btn btn-danger btn-block" ng-disabled="ctrl.working" ng-click="ctrl.close()"
+                    ng-show="ctrl.isAuthenticated() && ctrl.state.door === 'open'">Close Door
+            </button>
+        </div>
     </div>
 
 </div>

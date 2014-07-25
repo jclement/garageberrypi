@@ -94,7 +94,7 @@ Update the settings in `config.json` to match your environment.  Of particular i
 ```json
 {
     "PORT": 3000,
-    "url": "https://adipose.net/gbp/",
+    "url": "https:///garageberrypi/",
 
     "jwtSecret": null,
 

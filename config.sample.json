@@ -1,11 +1,11 @@
 {
     "PORT": 3000,
-    "url": "https://adipose.net/gbp/",
+    "url": "https://garageberrypi/",
 
     "jwtSecret": "test",
 
     "webcam": {
-        "url": "/var/run/shm/webcam.jpeg"
+        "url": "/run/shm/webcam.jpeg"
     },
 
     "users": [

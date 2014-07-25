@@ -15,7 +15,7 @@ It has a very simple UI written in Angular + Bootstrap (yes, my garage is a disa
 ## Requirements
 
 * RaspberryPi running Raspbian or Arch or something
-* NodeJS
+* NodeJS (0.10+)
 * [Wifi Dongle (RTL8188CUS/RTL8192CU)](http://www.ebay.com/itm/230973235744) 
 * [gpio-admin](http://quick2wire.com/safe-controlled-access-to-gpio-on-the-raspberry-pi/) - export IO pins so that non-root users can access them.  Also attaches PIN 4 to internal pull-down resistor.
 * webcam (I use Microsoft LifeCam of some variety)
@@ -27,6 +27,8 @@ GarageberriPi makes use of one input (PIN 4 PULLDOWN) and one output pin (25).
 The `start` script automatically uses `gpio-admin` to export the two pins.
 
 ## Installation & Startup
+
+After you have a RPi with NodeJS installed...
 
 ```sh 
 $ git clone git@github.com:jclement/garageberrypi.git

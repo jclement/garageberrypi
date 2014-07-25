@@ -31,13 +31,13 @@ var setState = function (val) {
 
 doorStatus.watch(function (err, value) {
     if (state.door !== 'moving') {
-        setState(value ? 'closed' : 'open');
+        setState(value ? 'open' : 'closed');
     }
 });
 
 var updateState = function () {
     doorStatus.read(function (err, value) {
-        setState(value ? 'closed' : 'open');
+        setState(value ? 'open' : 'closed');
     });
 };
 updateState();

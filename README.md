@@ -10,7 +10,7 @@ It was written for several reasons:
 
 It has a very simple UI written in Angular + Bootstrap (yes, my garage is a disaster).
 
-<img src="http://d.pr/i/xBH3+">
+<img src="http://d.pr/i/xBH3+" style="border: 1px solid #000">
 
 ## Requirements
 

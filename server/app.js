@@ -18,11 +18,12 @@ var route_garage = require('./api/garage');
 
 var app = express();
 
-var notify = function (duration) {
+var notify = function (duration, priority) {
     var msg = {
         message: 'Door has been open for ' + Math.round(duration) + ' seconds.',
         title: 'GarageberryPi',
         url: config('url'),
+        priority: priority || 0,
         "url_title": "Open GarageberryPi"
     };
     if (duration > 60) {
@@ -35,11 +36,10 @@ var notify = function (duration) {
     });
 };
 
-watcher.register('open', 10, notify);
-watcher.register('open', 60, notify);
+watcher.register('open', 60 * 2, notify);
 watcher.register('open', 60 * 5, notify);
-watcher.register('open', 60 * 10, notify);
-watcher.register('open', 60 * 30, notify);
+watcher.register('open', 60 * 10, function(d) {notify(d, 1);});
+watcher.register('open', 60 * 30, function(d) {notify(d, 1);});
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());

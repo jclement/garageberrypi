@@ -33,6 +33,7 @@ The `start` script automatically uses `gpio-admin` to export the two pins.
 The door switch is a sketchy contact switch made out of coat hanger and pipe strapping like so:
 
 <img src="http://d.pr/i/8m51+">
+<img src="http://d.pr/i/90AL+">
 
 ## Installation & Startup
 

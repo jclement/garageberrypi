@@ -6,14 +6,13 @@ var path = require('path');
 var logger = require('morgan');
 var fs = require('fs');
 var _ = require('underscore');
-
-express.static.mime.define({'text/application-manifest':['manifest']});
+var request = require('request');
 
 var session = require('./lib/session');
 var garage = require('./lib/garage');
 var watcher = require('./lib/watcher');
 var config = require('./lib/config');
-var request = require('request');
+var html5cache = require('./lib/html5cache');
 
 var smsSend = function(msg) {};
 (function() {
@@ -75,6 +74,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
 app.use(express.static(path.join(__dirname, '..', 'client')));
 app.use(logger('dev'));
+app.use("/cache.manifest", html5cache.requestHandler);
 app.use("/lib", express.static(path.join(__dirname, '..', 'bower_components')));
 app.use('/api/auth', route_authentication);
 app.use('/api/garage', route_garage);

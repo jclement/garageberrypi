@@ -81,11 +81,12 @@ app.controller('gbpController', function ($http, $timeout, $interval, localStora
         // + duration since laste API call
         duration += Math.round((new Date().getTime() - stateTimestamp.getTime()) / 1000);
         if (duration > 60) {
-            return Math.round(duration / 60) + " minutes and " + (duration % 60) + " seconds"
+            return Math.floor(duration / 60) + " minutes and " + (duration % 60) + " seconds"
         } else {
             return duration + " seconds"
         }
     };
+
 
     var start_refresh = function () {
         var refresh = function () {

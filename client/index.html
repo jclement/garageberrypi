@@ -52,7 +52,6 @@
 <div class="container" ng-hide="ctrl.initialized">
   <div class="alert alert-info">Loading...</div>
 </div>
-
 <div class="container" ng-show="ctrl.initialized">
 
     <div class="panel panel-primary" ng-hide="ctrl.isAuthenticated()">
@@ -90,7 +89,7 @@
 
     <div ng-show="ctrl.isAuthenticated()" ng-show="ctrl.state">
         <div class="alert alert-success" ng-show="ctrl.state.door === 'closed'">Door is currently closed</div>
-        <div class="alert alert-danger" ng-show="ctrl.state.door === 'open'">Door is currently open and has been for
+        <div class="alert alert-danger" ng-show="ctrl.state.door === 'open'">Door has been open for
             {{ctrl.readableDuration()}}.
         </div>
         <div class="alert alert-warning" ng-show="ctrl.state.door === 'moving'">Door is currently moving</div>

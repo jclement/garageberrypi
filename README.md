@@ -100,7 +100,7 @@ Update the settings in `config.json` to match your environment.  Of particular i
 * `jwtSecret`: This is used to encrypt the authentication tokens (stored client-side local storage).  It must be a secure random string!  If it's left as null, a random string will automatically be generated on startup.
 * `users`: Contains a list of users authorized to connect.  I started off with some fancy bcrypt implementation but it turns out that is rather expensive for my poor little RPi.
 * `garage:move_time`: I don't have a sensor to actually detect when the door is moving so this is an approximate travel time for the door.
-* `notify:pushover`: Contains a list of user/token pairs for notifying users via. pushover.
+* `notify:pushover`: Contains a list of user/token pairs, and intervals (min), for notifying users via. pushover.
 * `notify:twilio`: Allows notification via SMS using [Twilio](http://twilio.com).
 
 ```json
@@ -128,16 +128,21 @@ Update the settings in `config.json` to match your environment.  Of particular i
     },
 
     "notify": {
-        "pushover": [
-            {"user": "...", "token": "..."}
+      "pushover": { 
+        "devices": [
+          {"user":"...", "token": "..."}
         ],
-        "twilio": {
-          "enable": false,
-          "sid": "...",
-          "token": "...",
-          "from": "+...",
-          "numbers": ["+..."]
-        }
+        "trigger_low": [2,5],
+        "trigger_high": [10,20]
+      },
+      "twilio": {
+        "enable": false,
+        "sid": "...",
+        "token": "...",
+        "from": "+1555...",
+        "numbers": [],
+        "trigger": [30,60,120]
+      }
     }
 }
 

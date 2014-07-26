@@ -6,69 +6,17 @@ var path = require('path');
 var logger = require('morgan');
 var fs = require('fs');
 var _ = require('underscore');
-var request = require('request');
 
 var session = require('./lib/session');
 var garage = require('./lib/garage');
-var watcher = require('./lib/watcher');
 var config = require('./lib/config');
 var html5cache = require('./lib/html5cache');
-
-var smsSend = function(msg) {};
-(function() {
-  if (config("notify:twilio:enable")) {
-    var twilio = require('twilio')(config('notify:twilio:sid'), config('notify:twilio:token'));
-    smsSend = function(msg) {
-      _.each(config('notify:twilio:numbers'), function(number) {
-        twilio.sendMessage({
-          to: number,
-          from: config('notify:twilio:from'),
-          body: msg
-        });
-      });
-    };
-  }
-})();
+require('./lib/notify');
 
 var route_authentication = require('./api/authentication');
 var route_garage = require('./api/garage');
 
 var app = express();
-
-var notify = function (duration, priority) {
-    var msg = {
-        message: 'Door has been open for ' + Math.round(duration) + ' seconds.',
-        title: 'GarageberryPi',
-        url: config('url'),
-        priority: priority || 0,
-        "url_title": "Open GarageberryPi"
-    };
-    if (duration > 60) {
-        msg.message = 'Door has been open for ' + Math.round(duration / 60) + ' minutes.';
-    }
-    _.each(config("notify:pushover"), function (settings) {
-        var tmp = {};
-        _.extend(tmp, msg, settings);
-        request.post('https://api.pushover.net/1/messages.json').form(tmp);
-    });
-};
-
-// low priority warnings
-_.each([2,5], function(duration) {
-  watcher.register('open', 60 * duration, notify);
-});
-
-// high priority warnings
-_.each([10,20], function(duration) {
-  watcher.register('open', 60 * duration, function(d) {notify(d, 1);});
-});
-
-// super high priority.. maybe someone will notice SMS
-_.each([30,60,120], function(duration) {
-  watcher.register('open', 60 * duration, function(d) {
-    smsSend('Garage door open for ' + Math.round(duration/60) + ' minutes!');
-  });
-});
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
@@ -82,6 +30,7 @@ app.use('/api/garage', route_garage);
 app.get('/webcam.jpg', function (req, res) {
     var token = req.query.token;
     if (token) {
+        // only server webcam images if authenticated
         session.verify(token).then(
             function () {
                 fs.exists(config('webcam:url'), function (exists) {

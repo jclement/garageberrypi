@@ -22,15 +22,19 @@
     },
 
     "notify": {
-        "pushover": [
-            { "user": "...", "token": "..." }
+      "pushover": { 
+        "devices": [
+          {"user":"...", "token": "..."}
         ],
-        "twilio": {
-          "enable": false,
-          "sid": "...",
-          "token": "...",
-          "from": "+...",
-          "numbers": ["+..."]
-        }
-    }
+        "trigger_low": [2,5],
+        "trigger_high": [10,20]
+      },
+      "twilio": {
+        "enable": false,
+        "sid": "...",
+        "token": "...",
+        "from": "+1555...",
+        "numbers": [],
+        "trigger": [30,60,120]
+      }
 }

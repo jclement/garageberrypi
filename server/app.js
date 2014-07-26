@@ -7,6 +7,8 @@ var logger = require('morgan');
 var fs = require('fs');
 var _ = require('underscore');
 
+express.static.mime.define({'text/application-manifest':['manifest']});
+
 var session = require('./lib/session');
 var garage = require('./lib/garage');
 var watcher = require('./lib/watcher');

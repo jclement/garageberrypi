@@ -24,6 +24,13 @@
     "notify": {
         "pushover": [
             { "user": "...", "token": "..." }
-        ]
+        ],
+        "twilio": {
+          "enable": false,
+          "sid": "...",
+          "token": "...",
+          "from": "+...",
+          "numbers": ["+..."]
+        }
     }
 }

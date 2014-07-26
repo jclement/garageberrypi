@@ -13,6 +13,22 @@ var watcher = require('./lib/watcher');
 var config = require('./lib/config');
 var request = require('request');
 
+var smsSend = function(msg) {};
+(function() {
+  if (config("notify:twilio:enable")) {
+    var twilio = require('twilio')(config('notify:twilio:sid'), config('notify:twilio:token'));
+    smsSend = function(msg) {
+      _.each(config('notify:twilio:numbers'), function(number) {
+        twilio.sendMessage({
+          to: number,
+          from: config('notify:twilio:from'),
+          body: msg
+        });
+      });
+    };
+  }
+})();
+
 var route_authentication = require('./api/authentication');
 var route_garage = require('./api/garage');
 
@@ -36,10 +52,22 @@ var notify = function (duration, priority) {
     });
 };
 
-watcher.register('open', 60 * 2, notify);
-watcher.register('open', 60 * 5, notify);
-watcher.register('open', 60 * 10, function(d) {notify(d, 1);});
-watcher.register('open', 60 * 30, function(d) {notify(d, 1);});
+// low priority warnings
+_.each([2,5], function(duration) {
+  watcher.register('open', 60 * duration, notify);
+});
+
+// high priority warnings
+_.each([10,20], function(duration) {
+  watcher.register('open', 60 * duration, function(d) {notify(d, 1);});
+});
+
+// super high priority.. maybe someone will notice SMS
+_.each([30,60,120], function(duration) {
+  watcher.register('open', 60 * duration, function(d) {
+    smsSend('Garage door open for ' + Math.round(duration/60) + ' minutes!');
+  });
+});
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());

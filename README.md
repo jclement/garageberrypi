@@ -101,6 +101,7 @@ Update the settings in `config.json` to match your environment.  Of particular i
 * `users`: Contains a list of users authorized to connect.  I started off with some fancy bcrypt implementation but it turns out that is rather expensive for my poor little RPi.
 * `garage:move_time`: I don't have a sensor to actually detect when the door is moving so this is an approximate travel time for the door.
 * `notify:pushover`: Contains a list of user/token pairs for notifying users via. pushover.
+* `notify:twilio`: Allows notification via SMS using [Twilio](http://twilio.com).
 
 ```json
 {
@@ -129,7 +130,14 @@ Update the settings in `config.json` to match your environment.  Of particular i
     "notify": {
         "pushover": [
             {"user": "...", "token": "..."}
-        ]
+        ],
+        "twilio": {
+          "enable": false,
+          "sid": "...",
+          "token": "...",
+          "from": "+...",
+          "numbers": ["+..."]
+        }
     }
 }
 

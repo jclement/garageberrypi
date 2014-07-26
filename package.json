@@ -16,6 +16,7 @@
         "underscore": "*",
         "jwt-simple": "*",
         "request": "*",
+        "twilio": "*",
         "q": "*"
     }
 }

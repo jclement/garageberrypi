@@ -50,7 +50,7 @@ _.each(config('notify:pushover:trigger_high'), function(duration) {
 // SMS notifications
 _.each(config('notify:twilio:trigger'), function(duration) {
   watcher.register('open', 60 * duration, function(d) {
-    smsSend('Garage door open for ' + Math.round(duration/60) + ' minutes!');
+    smsSend('Garage door open for ' + Math.round(d/60) + ' minutes!');
   });
 });
 

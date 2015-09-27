@@ -8,8 +8,8 @@ var fs = require('fs');
 var session = require('../lib/session');
 
 function doIfAuthenticated(req, res, action) {
-    var username = (req.body.username || '').toLowerCase();
-    var password = req.body.password;
+    var username = (req.query.username || '').toLowerCase();
+    var password = req.query.password;
     session.login(username, password).then(
         function (token) {
             action(req, res);

@@ -22,7 +22,7 @@
     },
 
     "notify": {
-      "pushover": { 
+      "pushover": {
         "devices": [
           {"user":"...", "token": "..."}
         ],
@@ -37,4 +37,5 @@
         "numbers": [],
         "trigger": [30,60,120]
       }
+  }
 }

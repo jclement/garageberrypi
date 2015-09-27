@@ -19,28 +19,28 @@ function doIfAuthenticated(req, res, action) {
         });
 };
 
-router.post('/status', function (req, res) {
+router.get('/status', function (req, res) {
     doIfAuthenticated(req, res, function(req, res) {
         var status = garage.state();
         res.json(status);
     });
 });
 
-router.post('/open', function (req, res) {
+router.get('/open', function (req, res) {
     doIfAuthenticated(req, res, function(req, res) {
         garage.open();
         res.end('');
     });
 });
 
-router.post('/close', function (req, res) {
+router.get('/close', function (req, res) {
     doIfAuthenticated(req, res, function(req, res) {
         garage.close();
         res.end('');
     });
 });
 
-router.post('/toggle', function (req, res) {
+router.get('/toggle', function (req, res) {
     doIfAuthenticated(req, res, function(req, res) {
         var state = garage.state();
         if (state === 'open') {

@@ -15,6 +15,7 @@ require('./lib/notify');
 
 var route_authentication = require('./api/authentication');
 var route_garage = require('./api/garage');
+var route_automation = require('./api/automation');
 
 var app = express();
 
@@ -26,6 +27,7 @@ app.use("/cache.manifest", html5cache.requestHandler);
 app.use("/lib", express.static(path.join(__dirname, '..', 'bower_components')));
 app.use('/api/auth', route_authentication);
 app.use('/api/garage', route_garage);
+app.use('/api/automation', route_automation);
 
 app.get('/webcam.jpg', function (req, res) {
     var token = req.query.token;

@@ -42,7 +42,7 @@ router.get('/close', function (req, res) {
 
 router.get('/toggle', function (req, res) {
     doIfAuthenticated(req, res, function(req, res) {
-        var state = garage.state();
+        var state = garage.state().door;
         if (state === 'open') {
             garage.close();
             res.end('closing');
